@@ -17,7 +17,7 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     Timer(  const Duration(seconds: 2),(){
-     Navigator.pushNamedAndRemoveUntil(context, RoutesName.signIn,(route) => false);
+     Navigator.pushNamedAndRemoveUntil(context, RoutesName.layout_view,(route) => false);
     });
     // TODO: implement initState
     super.initState();

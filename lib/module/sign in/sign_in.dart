@@ -87,7 +87,7 @@ class _SignInState extends State<SignIn> {
             ).setVerticalPadding(context, .01),
             ElevatedButton(onPressed: ()async{
               if(form_state.currentState!.validate()){
-                FirebaseAuth_Email_Password.signin_with_email_and_password(
+                Firebase_funcation.signin_with_email_and_password(
                     _emailcontroller.text,
                     _passwordcontroller.text
                 ).then(
@@ -161,7 +161,16 @@ class _SignInState extends State<SignIn> {
                 ),
               ],
             ).setVerticalPadding(context, .01),
-            ElevatedButton(onPressed: (){},
+            ElevatedButton(onPressed: ()async{
+
+              final userCredential =
+              await Firebase_funcation.signInWithGoogle();
+              print("Google result: $userCredential");
+              if (userCredential != null) {
+                navigatorKey.currentState!.pushNamedAndRemoveUntil(RoutesName.layout_view, (routes)=>false);
+              }
+
+            },
 
                 style:ElevatedButton.styleFrom(
                     elevation: 0,

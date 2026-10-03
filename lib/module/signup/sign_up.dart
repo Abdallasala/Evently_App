@@ -126,7 +126,7 @@ class _SignUpState extends State<SignUp> {
               ),).setOnlyPadding(context,.02,.01,.0,.0),
             ElevatedButton(onPressed: ()async{
            if(form_state.currentState!.validate()){
-             FirebaseAuth_Email_Password.create_Account(
+             Firebase_funcation.create_Account(
                  _emailcontroller.text,
                  _passwordcontroller.text
              ).then(
