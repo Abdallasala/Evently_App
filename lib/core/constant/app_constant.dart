@@ -7,4 +7,12 @@ abstract class AppConstant {
   static const google_icon ='assets/icons/google_icn.png';
   static const person_icon ='assets/icons/person_icn.png';
   static const pasword_forget ='assets/images/forget_paswword.png';
+  static const selected_home ='assets/icons/selcted_home_icn.png';
+  static const selected_map_icn ='assets/icons/selected_map_icn.png';
+  static const selected_favorite_icn ='assets/icons/selected_favorite_icn.png';
+  static const selected_user_icn ='assets/icons/selected_user_icn.png';
+  static const un_selected_home ='assets/icons/un_selcted_home_icn.png';
+  static const un_selected_map_icn ='assets/icons/un_selected_map_icn.png';
+  static const un_selected_favorite_icn ='assets/icons/un_selected_favorite_icn.png';
+  static const un_selected_user_icn ='assets/icons/un_selected_user_icn.png';
 }

@@ -5,4 +5,5 @@ abstract class RoutesName {
   static const signUp ='sign_up';
   static const forgetPassword ='forget_password';
   static const layout_view ='layout_view';
+  static const create_event ='create_event';
 }

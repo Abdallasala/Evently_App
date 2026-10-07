@@ -7,6 +7,13 @@ abstract class AppThemeManger {
     appBarTheme: AppBarTheme(
       backgroundColor: ColorPalette.primaryColor,
       centerTitle: true,
+      titleTextStyle:TextStyle(
+        fontSize: 24,
+        fontWeight: FontWeight.w500
+      ) ,
+      iconTheme: IconThemeData(
+        color: ColorPalette.primaryColor
+      ),
     )
   );
 }
