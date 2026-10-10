@@ -1,5 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:evently_app_c13_sun_7_pm/core/services/firebase_firestore_serivce.dart';
 import 'package:evently_app_c13_sun_7_pm/core/services/snack_bar_service.dart';
+import 'package:evently_app_c13_sun_7_pm/models/event_data_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -87,5 +92,28 @@ class Firebase_funcation {
     } finally {
       EasyLoading.dismiss();
     }
+  }
+  static Future<void> resetPassword(String email) async{
+  try{
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    SnackBarService.showSuccessMessage('Reset password successfully');
+    //Future.value(true);
+
+  }catch(e){
+    Future.value(false);
+    SnackBarService.showErrorMessage('faild reset password ');
+  }
+  }
+static CollectionReference<EventDataModel> getCollectionRef(){
+    ///Get instance from firestore using func with converter to
+  return  FirebaseFirestore.instance.collection(EventDataModel.collectionName).withConverter(
+        fromFirestore: (snapshot,_)=>EventDataModel.fromFirestore(snapshot.data()!),
+        toFirestore: (event,_)=>event.toFirestore());
+  }
+static Future<void>  createNewEvent(EventDataModel eventData)async{
+   final  collectionRef =getCollectionRef();
+ var docRef=   collectionRef.doc();
+   eventData.eventID =docRef.id;
+  return await docRef.set(eventData);
   }
 }

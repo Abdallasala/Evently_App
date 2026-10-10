@@ -10,4 +10,5 @@ class EventCategory {
     required this.eventCategoryIcon,
     required this.eventCategoryImg,
   });
+
 }
