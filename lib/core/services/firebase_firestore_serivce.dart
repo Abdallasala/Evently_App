@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/event_data_model.dart';
 
 class FirebaseFirestoreService {
-  /// 1- Get Collection Reference
+  /// 1- Get Collection Reference with Converter
   static CollectionReference<EventDataModel> getCollectionReference() {
     return FirebaseFirestore.instance
         .collection(EventDataModel.collectionName)
@@ -16,75 +16,78 @@ class FirebaseFirestoreService {
         );
   }
 
+  /// 2- Create New Event
   static Future<bool> createNewEvent(EventDataModel data) async {
     try {
       var collectionRef = getCollectionReference();
       var docRef = collectionRef.doc();
       data.eventID = docRef.id;
-      docRef.set(data);
-      return Future.value(true);
+      await docRef.set(data);
+      return true;
     } catch (error) {
-      return Future.value(false);
+      log("createNewEvent error: $error");
+      return false;
     }
   }
 
+  /// 3- Get All Data Once
   static Future<List<EventDataModel>> getDataFromFirestore() async {
-    var collectionRef = getCollectionReference();
-    QuerySnapshot<EventDataModel> data = await collectionRef.get();
+    try {
+      var collectionRef = getCollectionReference();
+      QuerySnapshot<EventDataModel> data = await collectionRef.get();
 
-    List<EventDataModel> eventDataList = data.docs.map(
-      (element) {
-        log(element.data().toFirestore().toString());
+      List<EventDataModel> eventDataList = data.docs.map((element) {
         return element.data();
-      },
-    ).toList();
-    return eventDataList;
+      }).toList();
+
+      return eventDataList;
+    } catch (error) {
+      log("getDataFromFirestore error: $error");
+      return [];
+    }
   }
 
+  /// 4- Get Live Stream Filtered by Category
+  static Stream<QuerySnapshot<EventDataModel>> getStreamData(String categoryName) {
+    var collectionRef = getCollectionReference();
+    if (categoryName == "All" || categoryName.isEmpty) {
+      return collectionRef.snapshots();
+    }
+    return collectionRef
+        .where("eventCategory", isEqualTo: categoryName)
+        .snapshots();
+  }
+
+  /// 5- Get Live Stream Favorite Events Only
   static Stream<QuerySnapshot<EventDataModel>> getStreamFavoriteData() {
-    var collectionRef = getCollectionReference().where(
-      "isFavorite",
-      isEqualTo: true,
-    );
-
-    return collectionRef.snapshots();
+    return getCollectionReference()
+        .where("isFavorite", isEqualTo: true)
+        .snapshots();
   }
 
-  static Stream<QuerySnapshot<EventDataModel>> getStreamData(
-      String categoryName) {
-    var collectionRef = getCollectionReference().where(
-      "eventCategory",
-      isEqualTo: categoryName,
-    );
-
-    return collectionRef.snapshots();
-  }
-
-  Future<bool> deleteEvent(EventDataModel data) async {
+  /// 6- Delete Event
+  static Future<bool> deleteEvent(EventDataModel data) async {
     try {
       var collectionRef = getCollectionReference();
       var docRef = collectionRef.doc(data.eventID);
-
-      docRef.delete();
-
-      return Future.value(true);
+      await docRef.delete();
+      return true;
     } catch (error) {
-      return Future.value(false);
+      log("deleteEvent error: $error");
+      return false;
     }
   }
 
+  /// 7- Update Event
   static Future<bool> updateEvent(EventDataModel data) async {
     try {
       var collectionRef = getCollectionReference();
       var docRef = collectionRef.doc(data.eventID);
-
-      docRef.update(
-        data.toFirestore(),
-      );
-
-      return Future.value(true);
+      await docRef.update(data.toFirestore());
+      return true;
     } catch (error) {
-      return Future.value(false);
+      log("updateEvent error: $error");
+      return false;
     }
   }
 }

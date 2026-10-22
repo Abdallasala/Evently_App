@@ -1,0 +1,23 @@
+{
+  "@@locale": "en",
+  "welcomeBack": "Welcome Back ✨",
+  "home": "Home",
+  "map": "Map",
+  "favorite": "Favorite",
+  "profile": "Profile",
+  "theme": "Theme",
+  "language": "Language",
+  "light": "Light",
+  "dark": "Dark",
+  "createEvent": "Create Event",
+  "title": "Title",
+  "description": "Description",
+  "eventDate": "Event Date",
+  "eventTime": "Event Time",
+  "location": "Location",
+  "chooseEventLocation": "Choose Event Location",
+  "addEvent": "Add Event",
+  "eventDetails": "Event Details",
+  "editEvent": "Edit Event",
+  "searchForEvent": "Search for Event"
+}

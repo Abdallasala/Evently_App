@@ -9,6 +9,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/custom_text_field.dart';
+import '../../core/services/firebase_firestore_serivce.dart';
 import '../../models/event_category.dart';
 
 class CreateEvent extends StatefulWidget {
@@ -283,7 +284,7 @@ class _CreateEventState extends State<CreateEvent> {
 
                     try {
                       EasyLoading.show();
-                      await Firebase_funcation.createNewEvent(data);
+                      await FirebaseFirestoreService.createNewEvent(data);
                       EasyLoading.dismiss();
                       SnackBarService.showSuccessMessage("Event Created Successfully");
                       if (context.mounted) {

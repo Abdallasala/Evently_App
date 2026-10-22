@@ -1,0 +1,23 @@
+{
+  "@@locale": "ar",
+  "welcomeBack": "أهلاً بك مجدداً ✨",
+  "home": "الرئيسية",
+  "map": "الخريطة",
+  "favorite": "المفضلة",
+  "profile": "الملف الشخصي",
+  "theme": "المظهر",
+  "language": "اللغة",
+  "light": "فاتح",
+  "dark": "داكن",
+  "createEvent": "إنشاء حدث",
+  "title": "العنوان",
+  "description": "الوصف",
+  "eventDate": "تاريخ الحدث",
+  "eventTime": "وقت الحدث",
+  "location": "الموقع",
+  "chooseEventLocation": "اختر موقع الحدث",
+  "addEvent": "إضافة حدث",
+  "eventDetails": "تفاصيل الحدث",
+  "editEvent": "تعديل الحدث",
+  "searchForEvent": "البحث عن حدث"
+}

@@ -1,6 +1,8 @@
 
 import 'package:evently_app_c13_sun_7_pm/core/routes/pages_routes_name.dart';
 import 'package:evently_app_c13_sun_7_pm/module/CreateEvent/create_event.dart';
+import 'package:evently_app_c13_sun_7_pm/module/Edit%20Events/edit_view.dart';
+import 'package:evently_app_c13_sun_7_pm/module/Event%20Details/event_details.dart';
 import 'package:evently_app_c13_sun_7_pm/module/layout/layout_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +49,16 @@ abstract class AppRoutes {
       case RoutesName.create_event:
         return MaterialPageRoute(
             builder: ((context) =>  CreateEvent()),
+            settings: settings
+        );
+      case RoutesName.event_details:
+        return MaterialPageRoute(
+            builder: ((context) =>  EventDetails()),
+            settings: settings
+        );
+      case RoutesName.edit_event:
+        return MaterialPageRoute(
+            builder: ((context) =>  EditView()),
             settings: settings
         );
         default:
