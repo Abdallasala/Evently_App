@@ -4,7 +4,7 @@ import 'package:evently_app_c13_sun_7_pm/l10n/generated/app_localizations.dart';
 import 'package:evently_app_c13_sun_7_pm/module/layout/favorite/favorite_view.dart';
 import 'package:evently_app_c13_sun_7_pm/module/layout/home/home_view.dart';
 import 'package:evently_app_c13_sun_7_pm/module/layout/map/map_view.dart';
-import 'package:evently_app_c13_sun_7_pm/module/layout/profile/profile.dart';
+import 'package:evently_app_c13_sun_7_pm/module/layout/profile/profile_view.dart';
 import 'package:evently_app_c13_sun_7_pm/module/layout/setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -76,10 +76,7 @@ class LayoutView extends StatelessWidget {
         onTap: (index) {
           provider.changeNavIndex(index);
         },
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: ColorPalette.primaryColor,
-        selectedItemColor: ColorPalette.white,
-        unselectedItemColor: ColorPalette.white,
+
         items: bottomNavigationBarList.map((item) {
           return BottomNavigationBarItem(
             activeIcon: ImageIcon(

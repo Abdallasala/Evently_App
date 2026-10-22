@@ -1,7 +1,9 @@
 import 'package:evently_app_c13_sun_7_pm/core/extensions/padding_ext.dart';
 import 'package:evently_app_c13_sun_7_pm/core/theme/color_palette.dart';
 import 'package:evently_app_c13_sun_7_pm/module/layout/home/widget/event_card_widget.dart';
+import 'package:evently_app_c13_sun_7_pm/module/layout/setting_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -10,6 +12,7 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     var size =MediaQuery.of(context).size;
     var theme =Theme.of(context).textTheme;
+    var provider=Provider.of<SettingProvider>(context);
     return SingleChildScrollView(
       physics:const ClampingScrollPhysics(),
         child: Column(
@@ -58,21 +61,31 @@ class HomeView extends StatelessWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.wb_sunny_outlined,color: ColorPalette.white,),
+                          GestureDetector
+                            (
+                              onTap:(){
+                                provider.toggleTheme();
+        },
+                              child: Icon(provider.current_theme==ThemeMode.light?Icons.wb_sunny_rounded:Icons.wb_sunny_outlined,color: ColorPalette.white,)),
                           SizedBox(width: 5,),
-                          Container(
-                            height: size.height*35/831.39,
-                            width: 35,
-                            alignment: Alignment.center,
-                            decoration:BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8),
-                              ),
-                              color: ColorPalette.white
-                            ) ,
-                            child: Text('EN',
-                              style: theme.titleSmall!.copyWith(
-                                color: ColorPalette.primaryColor,
+                          GestureDetector(
+                            onTap: (){
+                              provider.toggleLanguage();
+                              },
+                            child: Container(
+                              height: size.height*35/831.39,
+                              width: 35,
+                              alignment: Alignment.center,
+                              decoration:BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8),
+                                ),
+                                color: ColorPalette.white
+                              ) ,
+                              child: Text(provider.currentlangage =='en'? 'EN':'AR',
+                                style: theme.titleSmall!.copyWith(
+                                  color: ColorPalette.primaryColor,
+                                ),
                               ),
                             ),
                           )
