@@ -9,7 +9,7 @@ class EventDataModel {
   final String eventImage;
   final DateTime eventDate;
   final TimeOfDay eventTime;
-  final bool isFavorite;
+  bool isFavorite;
 
   EventDataModel({
     this.eventID = '',

@@ -1,7 +1,7 @@
 import 'package:evently_app_c13_sun_7_pm/core/constant/app_constant.dart';
 import 'package:evently_app_c13_sun_7_pm/core/theme/color_palette.dart';
 import 'package:evently_app_c13_sun_7_pm/l10n/generated/app_localizations.dart';
-import 'package:evently_app_c13_sun_7_pm/module/layout/favorite/favorite_view.dart';
+import 'package:evently_app_c13_sun_7_pm/module/layout/favorite/favorites_view.dart';
 import 'package:evently_app_c13_sun_7_pm/module/layout/home/home_view.dart';
 import 'package:evently_app_c13_sun_7_pm/module/layout/map/map_view.dart';
 import 'package:evently_app_c13_sun_7_pm/module/layout/profile/profile_view.dart';
@@ -18,7 +18,7 @@ class LayoutView extends StatelessWidget {
   final List<Widget> currentTab = const [
     HomeView(),
     MapView(),
-    FavoriteView(),
+  FavoritesView(),
     ProfileView(),
   ];
 

@@ -1,82 +1,104 @@
-import 'package:evently_app_c13_sun_7_pm/core/extensions/extensions.dart';
-import 'package:evently_app_c13_sun_7_pm/core/theme/color_palette.dart';
+import 'package:evently_app_c13_sun_7_pm/core/routes/pages_routes_name.dart';
+import 'package:evently_app_c13_sun_7_pm/core/services/firebase_firestore_serivce.dart';
+import 'package:evently_app_c13_sun_7_pm/main.dart';
+import 'package:evently_app_c13_sun_7_pm/models/event_data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-import '../../../../core/routes/pages_routes_name.dart';
+import '../../../../core/theme/color_palette.dart';
 
-class EventCard extends StatelessWidget {
-  const EventCard({super.key});
+class EventCardWidget extends StatelessWidget {
+  final EventDataModel eventDataModel;
+
+  const EventCardWidget({
+    super.key,
+    required this.eventDataModel,
+  });
 
   @override
   Widget build(BuildContext context) {
-    var size =MediaQuery.of(context).size;
-    var theme =Theme.of(context).textTheme;
-    return Container(
-
-      height: 200,
-      decoration: BoxDecoration(
-      border: Border.all(
-        color: ColorPalette.primaryColor,
-        width: 1.5
+    var theme = Theme.of(context);
+    return GestureDetector(
+      onTap: (){
+        navigatorKey.currentState!.pushNamed(RoutesName.event_details);
+      },
+      child: Container(
+        height: 200,
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16.0),
+          border: Border.all(color: ColorPalette.primaryColor, width: 1.4),
+          image: DecorationImage(
+            image: AssetImage(
+              eventDataModel.eventImage,
+            ),
+            fit: BoxFit.fitWidth,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 45,
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(vertical: 2),
+              // height: 49,
+              decoration: BoxDecoration(
+                color: ColorPalette.white,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Text(
+                DateFormat("dd MMM").format(eventDataModel.eventDate),
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: ColorPalette.primaryColor),
+              ),
+            ),
+            const Spacer(),
+            Container(
+              width: double.infinity,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+              // height: 49,
+              decoration: BoxDecoration(
+                color: ColorPalette.white,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      eventDataModel.eventTitle,
+                      textAlign: TextAlign.start,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  GestureDetector(
+                    onTap: () {
+                      eventDataModel.isFavorite = !eventDataModel.isFavorite;
+                      FirebaseFirestoreService.updateEvent(eventDataModel);
+                    },
+                    child: Icon(
+                      eventDataModel.isFavorite
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: ColorPalette.primaryColor,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-        borderRadius: BorderRadius.circular(25),
-        image: DecorationImage(image: AssetImage('assets/images/category/birthday.png',),
-            fit:BoxFit.cover )
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-         crossAxisAlignment: CrossAxisAlignment.start,
-         children: [
-           Container(
-         //    height:49,
-             width: 50,
-            alignment: Alignment.center,
-             decoration:BoxDecoration(
-                 borderRadius: BorderRadius.all(
-                   Radius.circular(8),
-                 ),
-                 color: ColorPalette.white
-             ) ,
-             child: Column(
-               children: [
-                 Text('21 Nov',
-                   style: theme.titleLarge!.copyWith(
-                     color: ColorPalette.primaryColor,
-                   ),
-                   textAlign: TextAlign.center,
-
-                 ),
-               ],
-             ),
-           ),
-           Container(
-           //  height:49,
-            // width: 43,
-             //  alignment: Alignment.center,
-             padding: EdgeInsets.all(5),
-             decoration:BoxDecoration(
-                 borderRadius: BorderRadius.all(
-                   Radius.circular(8),
-                 ),
-                 color: ColorPalette.white
-             ) ,
-             child: Row(
-               children: [
-                 Text('This is a Birthday Party ',
-                   style: theme.titleSmall!.copyWith(
-                   //  color: ColorPalette.primaryColor,
-                     fontWeight: FontWeight.bold,
-                     fontSize: 14
-                   ),
-
-                 ),
-                 Spacer(),
-                 Icon(Icons.favorite_border_outlined,color: ColorPalette.primaryColor,)
-               ],
-             ),
-           ),
-         ],
-      ).setHorizontalPadding(context,.01).setVerticalPadding(context, .01),
     );
   }
 }
