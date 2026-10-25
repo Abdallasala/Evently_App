@@ -1,4 +1,6 @@
+import 'package:evently_app_c13_sun_7_pm/module/layout/setting_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../core/theme/color_palette.dart';
 
@@ -9,7 +11,7 @@ class HomeHeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
     var theme = Theme.of(context);
-
+   var provider =Provider.of<SettingProvider>(context);
     return Container(
       height: mediaQuery.size.height * 0.25,
       padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
@@ -62,25 +64,35 @@ class HomeHeaderWidget extends StatelessWidget {
               const Spacer(),
               Row(
                 children: [
-                  Icon(
-                    Icons.wb_sunny_outlined,
-                    size: 28,
-                    color: ColorPalette.white,
+                  GestureDetector(
+                    onTap: (){
+                      provider.toggleTheme();
+                    },
+                    child: Icon(
+                   provider.current_theme==ThemeMode.dark ?  Icons.wb_sunny_outlined:Icons.wb_sunny_rounded,
+                      size: 28,
+                      color: ColorPalette.white,
+                    ),
                   ),
                   SizedBox(width: 10),
-                  Container(
-                    width: 35,
-                    height: 35,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: ColorPalette.white,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Text(
-                      "EN",
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: ColorPalette.primaryColor,
-                        fontWeight: FontWeight.bold,
+                  GestureDetector(
+                    onTap: (){
+                      provider.toggleLanguage();
+                    },
+                    child: Container(
+                      width: 35,
+                      height: 35,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: ColorPalette.white,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Text(
+                      provider.currentlangage=="en" ? "EN":'AR',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: ColorPalette.primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   )

@@ -20,7 +20,7 @@ class EventCardWidget extends StatelessWidget {
     var theme = Theme.of(context);
     return GestureDetector(
       onTap: (){
-        navigatorKey.currentState!.pushNamed(RoutesName.event_details);
+        navigatorKey.currentState!.pushNamed(RoutesName.event_details,arguments: eventDataModel);
       },
       child: Container(
         height: 200,
