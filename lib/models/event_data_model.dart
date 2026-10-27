@@ -9,6 +9,8 @@ class EventDataModel {
   final String eventImage;
   final DateTime eventDate;
   final TimeOfDay eventTime;
+  final double latitude;
+  final double longitude;
   bool isFavorite;
 
   EventDataModel({
@@ -19,6 +21,8 @@ class EventDataModel {
     required this.eventImage,
     required this.eventDate,
     required this.eventTime,
+    this.latitude = 0.0,
+    this.longitude = 0.0,
     this.isFavorite = false,
   });
 
@@ -43,6 +47,12 @@ class EventDataModel {
         json['eventDate'] ?? DateTime.now().millisecondsSinceEpoch,
       ),
       eventTime: parsedTime,
+      latitude: (json['latitude'] as num?)?.toDouble() ??
+          (json['latitdue'] as num?)?.toDouble() ??
+          0.0,
+      longitude: (json['longitude'] as num?)?.toDouble() ??
+          (json['longtiude'] as num?)?.toDouble() ??
+          0.0,
       isFavorite: json['isFavorite'] ?? false,
     );
   }
@@ -56,6 +66,8 @@ class EventDataModel {
         "eventImage": eventImage,
         "eventDate": eventDate.millisecondsSinceEpoch,
         "eventTime": "${eventTime.hour}:${eventTime.minute}",
+        "latitude": latitude,
+        "longitude": longitude,
         "isFavorite": isFavorite,
       };
 }

@@ -15,4 +15,5 @@ abstract class AppConstant {
   static const un_selected_map_icn ='assets/icons/un_selected_map_icn.png';
   static const un_selected_favorite_icn ='assets/icons/un_selected_favorite_icn.png';
   static const un_selected_user_icn ='assets/icons/un_selected_user_icn.png';
+  static const api_keys_map = 'AIzaSyA4jCl8EOcurxPLq6jjmRl6pxwwm65c9UA';
 }
