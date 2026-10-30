@@ -2,8 +2,9 @@ import 'package:evently_app_c13_sun_7_pm/core/extensions/extensions.dart';
 import 'package:evently_app_c13_sun_7_pm/core/services/snack_bar_service.dart';
 import 'package:evently_app_c13_sun_7_pm/core/theme/color_palette.dart';
 import 'package:evently_app_c13_sun_7_pm/models/event_data_model.dart';
+import 'package:evently_app_c13_sun_7_pm/module/CreateEvent/widget/event_location_picker.dart';
 import 'package:evently_app_c13_sun_7_pm/module/CreateEvent/widget/tab_widget.dart';
-import 'package:evently_app_c13_sun_7_pm/utiles/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
@@ -27,6 +28,9 @@ class _CreateEventState extends State<CreateEvent> {
   int selectedTap = 0;
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
+  double latitude = 0.0;
+  double longitude = 0.0;
+  String selectedLocationAddress = "Choose Event Location";
 
   List<EventCategory> eventCategories = [
     EventCategory(
@@ -220,7 +224,24 @@ class _CreateEventState extends State<CreateEvent> {
               ),
               const SizedBox(height: 8),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  final LocationResult? result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EventLocationPicker(
+                        initialLat: latitude,
+                        initialLng: longitude,
+                      ),
+                    ),
+                  );
+                  if (result != null) {
+                    setState(() {
+                      latitude = result.latitude;
+                      longitude = result.longitude;
+                      selectedLocationAddress = result.address;
+                    });
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                   elevation: 0,
@@ -244,15 +265,19 @@ class _CreateEventState extends State<CreateEvent> {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    Text(
-                      "Choose Event Location",
-                      style: theme.titleMedium?.copyWith(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: ColorPalette.primaryColor,
+                    Expanded(
+                      child: Text(
+                        selectedLocationAddress,
+                        style: theme.titleMedium?.copyWith(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: ColorPalette.primaryColor,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const Spacer(),
+                    const SizedBox(width: 5),
                     const Icon(
                       Icons.arrow_forward_ios_rounded,
                       color: ColorPalette.primaryColor,
@@ -274,12 +299,15 @@ class _CreateEventState extends State<CreateEvent> {
                     }
 
                     var data = EventDataModel(
+                      userID: FirebaseAuth.instance.currentUser?.uid ?? '',
                       eventTitle: _titleController.text.trim(),
                       eventDescription: _descriptionController.text.trim(),
                       eventCategory: eventCategories[selectedTap].eventCategoryName,
                       eventImage: eventCategories[selectedTap].eventCategoryImg,
                       eventDate: selectedDate!,
                       eventTime: selectedTime!,
+                      latitude: latitude,
+                      longitude: longitude,
                     );
 
                     try {

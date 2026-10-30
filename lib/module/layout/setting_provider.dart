@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SettingProvider extends ChangeNotifier {
   String currentlangage = 'en';
   ThemeMode current_theme = ThemeMode.light;
-
+  bool isSelected = true;
   int currentNavIndex = 0;
   int selectedCategoryIndex = 0;
 
@@ -34,6 +34,17 @@ class SettingProvider extends ChangeNotifier {
   void setCurrentTheme(ThemeMode newTheme) {
     if (current_theme == newTheme) return;
     current_theme = newTheme;
+    notifyListeners();
+  }
+
+  void setSelector(bool selected) {
+    if (isSelected == selected) return;
+    isSelected = selected;
+    notifyListeners();
+  }
+
+  void toggleSelector() {
+    isSelected = !isSelected;
     notifyListeners();
   }
 

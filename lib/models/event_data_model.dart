@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class EventDataModel {
   static const String collectionName = 'collectionDataEvent';
   String eventID;
+  String userID;
   final String eventTitle;
   final String eventDescription;
   final String eventCategory;
@@ -15,6 +16,7 @@ class EventDataModel {
 
   EventDataModel({
     this.eventID = '',
+    this.userID = '',
     required this.eventTitle,
     required this.eventDescription,
     required this.eventCategory,
@@ -39,6 +41,7 @@ class EventDataModel {
 
     return EventDataModel(
       eventID: json['eventID'] ?? '',
+      userID: json['userID'] ?? '',
       eventTitle: json['eventTitle'] ?? '',
       eventDescription: json['eventDescription'] ?? '',
       eventCategory: json['eventCategory'] ?? '',
@@ -60,6 +63,7 @@ class EventDataModel {
   /// Create data for firestore
   Map<String, dynamic> toFirestore() => {
         "eventID": eventID,
+        "userID": userID,
         "eventTitle": eventTitle,
         "eventDescription": eventDescription,
         "eventCategory": eventCategory,

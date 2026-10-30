@@ -3,13 +3,14 @@ import 'package:evently_app_c13_sun_7_pm/core/services/firebase_firestore_serivc
 import 'package:evently_app_c13_sun_7_pm/core/services/snack_bar_service.dart';
 import 'package:evently_app_c13_sun_7_pm/core/theme/color_palette.dart';
 import 'package:evently_app_c13_sun_7_pm/models/event_data_model.dart';
+import 'package:evently_app_c13_sun_7_pm/module/CreateEvent/widget/event_location_picker.dart';
+import 'package:evently_app_c13_sun_7_pm/module/CreateEvent/widget/tab_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/custom_text_field.dart';
 import '../../models/event_category.dart';
-import '../CreateEvent/widget/tab_widget.dart';
 
 class EditView extends StatefulWidget {
   const EditView({super.key});
@@ -26,6 +27,9 @@ class _EditViewState extends State<EditView> {
   int selectedTap = 0;
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
+  double latitude = 0.0;
+  double longitude = 0.0;
+  String selectedLocationAddress = "Choose Event Location";
   EventDataModel? eventDataModel;
   bool isInitialized = false;
 
@@ -67,6 +71,8 @@ class _EditViewState extends State<EditView> {
         _descriptionController = TextEditingController(text: eventDataModel!.eventDescription);
         selectedDate = eventDataModel!.eventDate;
         selectedTime = eventDataModel!.eventTime;
+        latitude = eventDataModel!.latitude;
+        longitude = eventDataModel!.longitude;
 
         int categoryIdx = eventCategories.indexWhere(
           (c) => c.eventCategoryName == eventDataModel!.eventCategory,
@@ -265,17 +271,88 @@ class _EditViewState extends State<EditView> {
                 ],
               ),
               const SizedBox(height: 20),
+              Text(
+                "Location",
+                style: theme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              ElevatedButton(
+                onPressed: () async {
+                  final LocationResult? result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EventLocationPicker(
+                        initialLat: latitude,
+                        initialLng: longitude,
+                      ),
+                    ),
+                  );
+                  if (result != null) {
+                    setState(() {
+                      latitude = result.latitude;
+                      longitude = result.longitude;
+                      selectedLocationAddress = result.address;
+                    });
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                  ),
+                  side: const BorderSide(color: ColorPalette.primaryColor),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: ColorPalette.primaryColor,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: const Icon(
+                        Icons.my_location_outlined,
+                        color: ColorPalette.white,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        selectedLocationAddress,
+                        style: theme.titleMedium?.copyWith(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: ColorPalette.primaryColor,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: ColorPalette.primaryColor,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
                   if (formKey.currentState!.validate()) {
                     var updatedData = EventDataModel(
                       eventID: eventDataModel!.eventID,
+                      userID: eventDataModel!.userID,
                       eventTitle: _titleController.text.trim(),
                       eventDescription: _descriptionController.text.trim(),
                       eventCategory: eventCategories[selectedTap].eventCategoryName,
                       eventImage: eventCategories[selectedTap].eventCategoryImg,
                       eventDate: selectedDate ?? eventDataModel!.eventDate,
                       eventTime: selectedTime ?? eventDataModel!.eventTime,
+                      latitude: latitude,
+                      longitude: longitude,
                       isFavorite: eventDataModel!.isFavorite,
                     );
 

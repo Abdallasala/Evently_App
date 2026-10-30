@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '/core/theme/color_palette.dart';
+import '../../../../core/theme/color_palette.dart';
 import '../../../../models/event_category.dart';
 
 class HomeTabWidget extends StatelessWidget {
@@ -18,25 +18,28 @@ class HomeTabWidget extends StatelessWidget {
     var theme = Theme.of(context);
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: !isSelected ? ColorPalette.primaryColor : ColorPalette.white,
+        color: isSelected ? ColorPalette.white : ColorPalette.primaryColor,
         borderRadius: BorderRadius.circular(20.0),
-        border: Border.all(color: ColorPalette.white),
+        border: Border.all(color: ColorPalette.white, width: 1.5),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             eventCategory.eventCategoryIcon,
-            color: !isSelected ? ColorPalette.white : ColorPalette.primaryColor,
+            color: isSelected ? ColorPalette.primaryColor : ColorPalette.white,
+            size: 20,
           ),
-          SizedBox(width: 5),
+          const SizedBox(width: 6),
           Text(
             eventCategory.eventCategoryName,
             style: theme.textTheme.titleMedium?.copyWith(
-                color: !isSelected
-                    ? ColorPalette.white
-                    : ColorPalette.primaryColor),
+              color: isSelected ? ColorPalette.primaryColor : ColorPalette.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
           )
         ],
       ),

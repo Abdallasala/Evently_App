@@ -1,11 +1,12 @@
 import 'package:evently_app_c13_sun_7_pm/core/services/snack_bar_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class Firebase_funcation {
   static final GoogleSignIn _googleSignIn = GoogleSignIn(
-    clientId: '767982188698-iiid07frphp11ahkd350efeptr14bs2l.apps.googleusercontent.com',
+    scopes: ['email', 'profile'],
   );
 
   static Future<bool> create_Account(String emailAddress, String password) async {
@@ -64,20 +65,26 @@ class Firebase_funcation {
     try {
       EasyLoading.show();
 
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (kIsWeb) {
+        final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+        return await FirebaseAuth.instance.signInWithPopup(googleProvider);
+      } else {
+        await _googleSignIn.signOut().catchError((_) => null);
+        final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
-      if (googleUser == null) {
-        return null;
+        if (googleUser == null) {
+          return null;
+        }
+
+        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        return await FirebaseAuth.instance.signInWithCredential(credential);
       }
-
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      return await FirebaseAuth.instance.signInWithCredential(credential);
     } catch (e, stackTrace) {
       print("GOOGLE SIGN IN ERROR: $e");
       print(stackTrace);

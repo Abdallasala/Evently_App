@@ -26,6 +26,11 @@ abstract class AppRoutes {
             builder: ((context) =>  OnBordingView()),
             settings: settings
         );
+      case RoutesName.onBoardingViewExplainApp:
+        return MaterialPageRoute(
+            builder: ((context) =>  OnBordingView()),
+            settings: settings
+        );
       case RoutesName.signIn:
         return MaterialPageRoute(
             builder: ((context) =>  SignIn()),

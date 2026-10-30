@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../models/event_data_model.dart';
 
@@ -22,6 +23,7 @@ class FirebaseFirestoreService {
       var collectionRef = getCollectionReference();
       var docRef = collectionRef.doc();
       data.eventID = docRef.id;
+      data.userID = FirebaseAuth.instance.currentUser?.uid ?? '';
       await docRef.set(data);
       return true;
     } catch (error) {
@@ -33,8 +35,9 @@ class FirebaseFirestoreService {
   /// 3- Get All Data Once
   static Future<List<EventDataModel>> getDataFromFirestore() async {
     try {
-      var collectionRef = getCollectionReference();
-      QuerySnapshot<EventDataModel> data = await collectionRef.get();
+      final currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
+      var query = getCollectionReference().where("userID", isEqualTo: currentUserId);
+      QuerySnapshot<EventDataModel> data = await query.get();
 
       List<EventDataModel> eventDataList = data.docs.map((element) {
         return element.data();
@@ -47,20 +50,23 @@ class FirebaseFirestoreService {
     }
   }
 
-  /// 4- Get Live Stream Filtered by Category
+  /// 4- Get Live Stream Filtered by Category and Current User ID
   static Stream<QuerySnapshot<EventDataModel>> getStreamData(String categoryName) {
-    var collectionRef = getCollectionReference();
-    if (categoryName == "All" || categoryName.isEmpty) {
-      return collectionRef.snapshots();
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
+    Query<EventDataModel> query = getCollectionReference().where("userID", isEqualTo: currentUserId);
+
+    if (categoryName != "All" && categoryName.isNotEmpty) {
+      query = query.where("eventCategory", isEqualTo: categoryName);
     }
-    return collectionRef
-        .where("eventCategory", isEqualTo: categoryName)
-        .snapshots();
+
+    return query.snapshots();
   }
 
-  /// 5- Get Live Stream Favorite Events Only
+  /// 5- Get Live Stream Favorite Events Only for Current User
   static Stream<QuerySnapshot<EventDataModel>> getStreamFavoriteData() {
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
     return getCollectionReference()
+        .where("userID", isEqualTo: currentUserId)
         .where("isFavorite", isEqualTo: true)
         .snapshots();
   }

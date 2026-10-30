@@ -1,17 +1,55 @@
+import 'package:evently_app_c13_sun_7_pm/core/services/location_services.dart';
 import 'package:evently_app_c13_sun_7_pm/module/layout/setting_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/theme/color_palette.dart';
 
-class HomeHeaderWidget extends StatelessWidget {
+class HomeHeaderWidget extends StatefulWidget {
   const HomeHeaderWidget({super.key});
+
+  @override
+  State<HomeHeaderWidget> createState() => _HomeHeaderWidgetState();
+}
+
+class _HomeHeaderWidgetState extends State<HomeHeaderWidget> {
+  String locationText = "Cairo, Egypt";
+  bool isLoadingLocation = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchLocation();
+  }
+
+  Future<void> _fetchLocation() async {
+    if (isLoadingLocation) return;
+    setState(() {
+      isLoadingLocation = true;
+    });
+    String address = await LocationServices.getCurrentCityAndCountry();
+    if (mounted) {
+      setState(() {
+        locationText = address;
+        isLoadingLocation = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
     var theme = Theme.of(context);
-   var provider =Provider.of<SettingProvider>(context);
+    var provider = Provider.of<SettingProvider>(context);
+
+    final user = FirebaseAuth.instance.currentUser;
+    final userName = (user?.displayName != null && user!.displayName!.isNotEmpty)
+        ? user.displayName!
+        : (user?.email != null && user!.email!.contains('@')
+            ? user.email!.split('@')[0]
+            : 'User');
+
     return Container(
       height: mediaQuery.size.height * 0.25,
       padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
@@ -36,28 +74,33 @@ class HomeHeaderWidget extends StatelessWidget {
                         ?.copyWith(color: ColorPalette.white),
                   ),
                   Text(
-                    "John Safwat",
+                    userName,
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: ColorPalette.white,
                     ),
                   ),
                   const SizedBox(height: 15),
-                  Row(
-                    children: [
-                      Image.asset(
-                        "assets/icons/un_selected_map_icn.png",
-                        height: 25,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        "Cairo, Egypt",
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: ColorPalette.white,
+                  GestureDetector(
+                    onTap: () {
+                      _fetchLocation();
+                    },
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          "assets/icons/un_selected_map_icn.png",
+                          height: 25,
                         ),
-                      )
-                    ],
+                        const SizedBox(width: 4),
+                        Text(
+                          isLoadingLocation ? "Locating..." : locationText,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: ColorPalette.white,
+                          ),
+                        )
+                      ],
+                    ),
                   )
                 ],
               ),
@@ -65,18 +108,20 @@ class HomeHeaderWidget extends StatelessWidget {
               Row(
                 children: [
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       provider.toggleTheme();
                     },
                     child: Icon(
-                   provider.current_theme==ThemeMode.dark ?  Icons.wb_sunny_outlined:Icons.wb_sunny_rounded,
+                      provider.isDark()
+                          ? Icons.wb_sunny_outlined
+                          : Icons.wb_sunny_rounded,
                       size: 28,
                       color: ColorPalette.white,
                     ),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       provider.toggleLanguage();
                     },
                     child: Container(
@@ -88,7 +133,7 @@ class HomeHeaderWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Text(
-                      provider.currentlangage=="en" ? "EN":'AR',
+                        provider.isEnglish() ? "EN" : 'AR',
                         style: theme.textTheme.titleSmall?.copyWith(
                           color: ColorPalette.primaryColor,
                           fontWeight: FontWeight.bold,
