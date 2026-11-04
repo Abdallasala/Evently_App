@@ -12,7 +12,7 @@
 /// 4. Highly scalable, testable, and maintainable.
 
 abstract class Shape {
-  double calculateArea();
+ double calculateArea() ;
 }
 
 class Rectangle implements Shape {
